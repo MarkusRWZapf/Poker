@@ -25,4 +25,15 @@ public class PokerHandEvaluatorTest {
         PokerHand flushHand = new PokerHand(pokerCards);
         assertEquals(Rank.FLUSH,flushHand.getRank());
     }
+
+    @Test
+    public void evaluateStraight() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.EIGHT));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.TEN));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.JACK));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.NINE));
+        PokerHand straightHand = new PokerHand(pokerCards);
+        assertEquals(Rank.STRAIGHT,straightHand.getRank());
+    }
 }
