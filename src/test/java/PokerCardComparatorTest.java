@@ -21,6 +21,7 @@ public class PokerCardComparatorTest {
 
     @Test
     public void listIsSortedAccordingToPokerCardRanking() {
+        pokerCards.sort(new PokerCardComparator());
         assertEquals(new PokerCard(Suit.HEARTS, Rank.THREE), pokerCards.getFirst());
         assertEquals(new PokerCard(Suit.CLUBS, Rank.FIVE), pokerCards.get(1));
         assertEquals(new PokerCard(Suit.DIAMONDS, Rank.TEN), pokerCards.get(2));
