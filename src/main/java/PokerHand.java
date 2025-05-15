@@ -12,9 +12,9 @@ public class PokerHand {
 
     private Rank rank;
 
-    public PokerHand(List<PokerCard> cards, Rank rank) {
+    public PokerHand(List<PokerCard> cards) {
         this.cards = cards;
-        this.rank = rank;
+        this.rank = PokerHandEvaluator.rankCardsInHand(cards);
     }
 
 }

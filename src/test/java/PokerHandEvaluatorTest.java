@@ -22,7 +22,7 @@ public class PokerHandEvaluatorTest {
         pokerCards.add(new PokerCard(Suit.SPADES, Value.THREE));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.ACE));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.TEN));
-        PokerHand flushHand = new PokerHand(pokerCards,Rank.HIGH_CARD);
+        PokerHand flushHand = new PokerHand(pokerCards);
         assertEquals(Rank.FLUSH,flushHand.getRank());
     }
 }
