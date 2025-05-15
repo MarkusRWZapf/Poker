@@ -7,7 +7,9 @@ public class PokerHandEvaluator {
         boolean isFlush = isFlush(pokerCards);
         boolean isStraight = isStraight(pokerCards);
 
-        if(isFlush){
+        if (isFlush && isStraight) {
+            return Rank.STRAIGHT_FLUSH;
+        } else if(isFlush){
             return Rank.FLUSH;
         } else if(isStraight){
             return Rank.STRAIGHT;
