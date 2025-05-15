@@ -1,0 +1,29 @@
+# Ignore IntelliJ IDEA files
+.idea/
+*.iml
+out/
+
+# Ignore compiled class files
+*.class
+
+# Ignore Maven & Gradle build artifacts
+target/
+*.jar
+*.war
+*.ear
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore generated files by IDE
+bin/
+dist/
+
+# Ignore test results
+test-output/
+
