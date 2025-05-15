@@ -38,7 +38,7 @@ public class PokerHandEvaluatorTest {
     }
 
     @Test
-    public void evaluatesStraightFlush_Correctly() {
+    public void evaluatesStraightFlushHand_Correctly() {
         pokerCards.add(new PokerCard(Suit.CLUBS, Value.JACK));
         pokerCards.add(new PokerCard(Suit.CLUBS, Value.NINE));
         pokerCards.add(new PokerCard(Suit.CLUBS, Value.TEN));
@@ -46,5 +46,38 @@ public class PokerHandEvaluatorTest {
         pokerCards.add(new PokerCard(Suit.CLUBS, Value.SEVEN));
         PokerHand straightHand = new PokerHand(pokerCards);
         assertEquals(Rank.STRAIGHT_FLUSH,straightHand.getRank());
+    }
+
+    @Test
+    public void evaluatesFourOfAKindHand_Correctly() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.JACK));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.NINE));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.NINE));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.NINE));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.NINE));
+        PokerHand straightHand = new PokerHand(pokerCards);
+        assertEquals(Rank.FOUR_OF_A_KIND,straightHand.getRank());
+    }
+
+    @Test
+    public void evaluatesThreeOfAKindHand_Correctly() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.JACK));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.JACK));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.JACK));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.NINE));
+        PokerHand straightHand = new PokerHand(pokerCards);
+        assertEquals(Rank.THREE_OF_A_KIND,straightHand.getRank());
+    }
+
+    @Test
+    public void evaluatesPairHand_Correctly() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.SEVEN));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.SEVEN));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.NINE));
+        PokerHand straightHand = new PokerHand(pokerCards);
+        assertEquals(Rank.ONE_PAIR,straightHand.getRank());
     }
 }
