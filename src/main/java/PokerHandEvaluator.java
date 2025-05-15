@@ -4,9 +4,12 @@ public class PokerHandEvaluator {
 
     public static Rank rankCardsInHand(List<PokerCard> pokerCards) {
 
-        if(isFlush(pokerCards)){
+        boolean isFlush = isFlush(pokerCards);
+        boolean isStraight = isStraight(pokerCards);
+
+        if(isFlush){
             return Rank.FLUSH;
-        } else if(isStraight(pokerCards)){
+        } else if(isStraight){
             return Rank.STRAIGHT;
         }
         return Rank.HIGH_CARD;
@@ -17,10 +20,10 @@ public class PokerHandEvaluator {
     }
 
     public static boolean isStraight(List<PokerCard> pokerCards) {
-        List<Integer> sortedOrdinalRanks = pokerCards.stream()
+        List<Integer> orderedRankIndices = pokerCards.stream()
                 .map(pokerCard -> pokerCard.getValue().ordinal()).sorted().toList();
-        for(int i = 0; i < sortedOrdinalRanks.size() - 1; i++){
-            if(sortedOrdinalRanks.get(i) + 1 != sortedOrdinalRanks.get(i+1)){
+        for(int i = 0; i < orderedRankIndices.size() - 1; i++){
+            if(orderedRankIndices.get(i) + 1 != orderedRankIndices.get(i+1)){
                 return false;
             }
         }  return true;

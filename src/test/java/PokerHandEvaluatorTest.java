@@ -16,7 +16,7 @@ public class PokerHandEvaluatorTest {
     }
 
     @Test
-    public void evaluateFlush() {
+    public void evaluatesFlushHand_Correctly() {
         pokerCards.add(new PokerCard(Suit.SPADES, Value.FIVE));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.KING));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.THREE));
@@ -27,7 +27,7 @@ public class PokerHandEvaluatorTest {
     }
 
     @Test
-    public void evaluateStraight() {
+    public void evaluatesStraightHand_Correctly() {
         pokerCards.add(new PokerCard(Suit.CLUBS, Value.EIGHT));
         pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.QUEEN));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.TEN));
