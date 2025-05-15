@@ -9,5 +9,5 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PokerCard {
     public Suit suit;
-    public Rank rank;
+    public Value value;
 }

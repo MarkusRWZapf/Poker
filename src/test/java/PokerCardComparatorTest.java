@@ -12,21 +12,21 @@ public class PokerCardComparatorTest {
 
     @BeforeEach
     public void setUp() {
-        pokerCards.add(new PokerCard(Suit.CLUBS, Rank.FIVE));
-        pokerCards.add(new PokerCard(Suit.SPADES, Rank.KING));
-        pokerCards.add(new PokerCard(Suit.HEARTS, Rank.THREE));
-        pokerCards.add(new PokerCard(Suit.CLUBS, Rank.ACE));
-        pokerCards.add(new PokerCard(Suit.DIAMONDS, Rank.TEN));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.FIVE));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.KING));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.ACE));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.TEN));
     }
 
     @Test
-    public void listIsSortedAccordingToPokerCardRanking() {
+    public void listIsSortedAccordingToPokerCardValue() {
         pokerCards.sort(new PokerCardComparator());
-        assertEquals(new PokerCard(Suit.HEARTS, Rank.THREE), pokerCards.getFirst());
-        assertEquals(new PokerCard(Suit.CLUBS, Rank.FIVE), pokerCards.get(1));
-        assertEquals(new PokerCard(Suit.DIAMONDS, Rank.TEN), pokerCards.get(2));
-        assertEquals(new PokerCard(Suit.SPADES, Rank.KING), pokerCards.get(3));
-        assertEquals(new PokerCard(Suit.CLUBS, Rank.ACE), pokerCards.getLast());
+        assertEquals(new PokerCard(Suit.HEARTS, Value.THREE), pokerCards.getFirst());
+        assertEquals(new PokerCard(Suit.CLUBS, Value.FIVE), pokerCards.get(1));
+        assertEquals(new PokerCard(Suit.DIAMONDS, Value.TEN), pokerCards.get(2));
+        assertEquals(new PokerCard(Suit.SPADES, Value.KING), pokerCards.get(3));
+        assertEquals(new PokerCard(Suit.CLUBS, Value.ACE), pokerCards.getLast());
     }
 
 
