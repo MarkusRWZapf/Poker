@@ -1,4 +1,6 @@
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PokerHandEvaluator {
 
@@ -7,14 +9,16 @@ public class PokerHandEvaluator {
         boolean isFlush = isFlush(pokerCards);
         boolean isStraight = isStraight(pokerCards);
 
-        if (isFlush && isStraight) {
-            return Rank.STRAIGHT_FLUSH;
-        } else if(isFlush){
-            return Rank.FLUSH;
-        } else if(isStraight){
-            return Rank.STRAIGHT;
-        }
-        return Rank.HIGH_CARD;
+        Map<Rank, Boolean> rankingMap = new LinkedHashMap<>();
+        rankingMap.put(Rank.STRAIGHT_FLUSH, isFlush && isStraight);
+        rankingMap.put(Rank.FLUSH, isFlush);
+        rankingMap.put(Rank.STRAIGHT, isStraight);
+
+        return rankingMap.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(Rank.HIGH_CARD);
     }
 
     public static boolean isFlush (List<PokerCard> pokerCards) {
