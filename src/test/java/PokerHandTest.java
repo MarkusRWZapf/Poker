@@ -6,7 +6,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PokerHandEvaluatorTest {
+public class PokerHandTest {
 
     private List<PokerCard> pokerCards = new ArrayList<>();
 
