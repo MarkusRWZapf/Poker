@@ -130,8 +130,8 @@ public class PokerHandTest {
         otherPokerCards.add(new PokerCard(Suit.CLUBS, Value.TWO));
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareHighCardsWithTheOnesInAnotherHand(secondHand));
-        assertEquals(-1, secondHand.compareHighCardsWithTheOnesInAnotherHand(firstHand));
+        assertEquals(1, firstHand.compareCardsDirectlyBetweenTwoHands(secondHand));
+        assertEquals(-1, secondHand.compareCardsDirectlyBetweenTwoHands(firstHand));
     }
 
     @Test
@@ -150,7 +150,7 @@ public class PokerHandTest {
         otherPokerCards.add(new PokerCard(Suit.DIAMONDS, Value.EIGHT));
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(0, firstHand.compareHighCardsWithTheOnesInAnotherHand(secondHand));
+        assertEquals(0, firstHand.compareCardsDirectlyBetweenTwoHands(secondHand));
     }
 
     @Test
@@ -195,7 +195,7 @@ public class PokerHandTest {
     public void comparesTwoPokerHands_Tie_In_Flush_Rank() {
         pokerCards.add(new PokerCard(Suit.SPADES, Value.THREE));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.SIX));
-        pokerCards.add(new PokerCard(Suit.SPADES, Value.FIVE));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.NINE));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.FOUR));
         pokerCards.add(new PokerCard(Suit.SPADES, Value.SEVEN));
 
@@ -224,6 +224,25 @@ public class PokerHandTest {
         otherPokerCards.add(new PokerCard(Suit.CLUBS, Value.TEN));
         otherPokerCards.add(new PokerCard(Suit.HEARTS, Value.JACK));
         otherPokerCards.add(new PokerCard(Suit.DIAMONDS, Value.NINE));
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void comparesTwoPokerHands_Tie_In_Four_Of_A_Kind_Rank() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.ACE));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.NINE));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.NINE));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.NINE));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.NINE));
+
+        List<PokerCard> otherPokerCards = new ArrayList<>();
+        otherPokerCards.add(new PokerCard(Suit.SPADES, Value.TEN));
+        otherPokerCards.add(new PokerCard(Suit.CLUBS, Value.FIVE));
+        otherPokerCards.add(new PokerCard(Suit.CLUBS, Value.TEN));
+        otherPokerCards.add(new PokerCard(Suit.HEARTS, Value.TEN));
+        otherPokerCards.add(new PokerCard(Suit.DIAMONDS, Value.TEN));
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(-1, firstHand.compareTo(secondHand));

@@ -15,25 +15,30 @@ public class PokerHand implements Comparable<PokerHand> {
 
     public PokerHand(List<PokerCard> cards) {
         if (cards.size() != 5) {
-            throw new IllegalArgumentException("You need 5 cards to play!");
+            throw new IllegalArgumentException("You need exactly 5 cards to play!");
         }
         this.cards = cards;
         this.rank = rankCardsInHand(cards);
     }
 
     @Override
-    public int compareTo(PokerHand other) {
-        int rankComparison = Integer.compare(this.rank.ordinal(), other.rank.ordinal());
+    public int compareTo(PokerHand otherHand) {
+        int rankComparison = Integer.compare(this.rank.ordinal(), otherHand.rank.ordinal());
         if (rankComparison != 0) return rankComparison;
 
-        return compareHighCardsWithTheOnesInAnotherHand(other);
+        //same rank detected. We need to break the tie.
+        return switch (rank) {
+            case FOUR_OF_A_KIND -> compareHandsWithMultipleMatches(otherHand, 4);
+            case FLUSH, STRAIGHT, STRAIGHT_FLUSH -> compareCardsDirectlyBetweenTwoHands(otherHand);
+            default -> compareCardsDirectlyBetweenTwoHands(otherHand);
+        };
     }
 
     public Rank rankCardsInHand(List<PokerCard> pokerCards) {
 
         boolean isFlush = isFlush(pokerCards);
         boolean isStraight = isStraight(pokerCards);
-        Map<Value, Long> valueOccurences = countValueOccurencesInHand(pokerCards);
+        Map<Value, Long> valueOccurences = countValueOccurences(pokerCards);
 
         Map<Rank, Boolean> rankingMap = new LinkedHashMap<>();
         rankingMap.put(Rank.STRAIGHT_FLUSH, isFlush && isStraight);
@@ -52,6 +57,55 @@ public class PokerHand implements Comparable<PokerHand> {
                 .orElse(Rank.HIGH_CARD);
     }
 
+    private Map<Value, Long> countValueOccurences(List<PokerCard> pokerCards) {
+        return pokerCards.stream().collect(Collectors.groupingBy(PokerCard::getValue, Collectors.counting()));
+    }
+
+    private int compareHandsWithMultipleMatches(PokerHand otherHand, int matchCount) {
+        Map<Value, Long> thisHandValueCounts = countValueOccurences(cards);
+        Map<Value, Long> otherHandValueCounts = countValueOccurences(otherHand.cards);
+
+        List<Value> thisHandRanked = thisHandValueCounts.entrySet().stream()
+                .filter(entry -> entry.getValue() == matchCount)
+                .map(Map.Entry::getKey)
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        List<Value> otherHandRanked = otherHandValueCounts.entrySet().stream()
+                .filter(entry -> entry.getValue() == matchCount)
+                .map(Map.Entry::getKey)
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        //Highest remaining card can already break the tie
+        int result = Integer.compare(thisHandRanked.getFirst().ordinal(), otherHandRanked.getFirst().ordinal());
+        if (result != 0) return result;
+
+        //Remaining cards need to be compared to break the tie
+        return compareCardsDirectlyBetweenTwoHands(otherHand);
+    }
+
+    public int compareCardsDirectlyBetweenTwoHands(PokerHand otherHand) {
+        List<Integer> thisHandValues = cards.stream()
+                .map(card -> card.getValue().ordinal())
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        List<Integer> otherHandValues = otherHand.getCards().stream()
+                .map(card -> card.getValue().ordinal())
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        int highestCardComparison = Integer.compare(thisHandValues.getFirst(), otherHandValues.getFirst());
+        if (highestCardComparison != 0) return highestCardComparison;
+
+        for (int i = 1; i < thisHandValues.size(); i++) {
+            int result = Integer.compare(thisHandValues.get(i), otherHandValues.get(i));
+            if (result != 0) return result;
+        }
+        return 0; // Still a tie
+    }
+
     private boolean isFlush (List<PokerCard> pokerCards) {
         return pokerCards.stream().map(PokerCard::getSuit).distinct().count() == 1;
     }
@@ -64,22 +118,6 @@ public class PokerHand implements Comparable<PokerHand> {
                 return false;
             }
         }  return true;
-    }
-
-    private Map<Value, Long> countValueOccurencesInHand(List<PokerCard> pokerCards) {
-        return pokerCards.stream().collect(Collectors.groupingBy(PokerCard::getValue, Collectors.counting()));
-    }
-
-    public int compareHighCardsWithTheOnesInAnotherHand(PokerHand otherHand) {
-        List<Integer> thisHandValues = cards.stream().map(card -> card.value.ordinal()).sorted(Comparator.reverseOrder()).toList();
-        List<Integer> otherHandValues = otherHand.getCards().stream().map(card -> card.value.ordinal()).sorted(Comparator.reverseOrder()).toList();
-
-        for (int i = 0; i < thisHandValues.size(); i++) {
-            int result = Integer.compare(thisHandValues.get(i), otherHandValues.get(i));
-            if (result != 0) return result;
-        }
-        return 0; // still a tie
-
     }
 
 }
