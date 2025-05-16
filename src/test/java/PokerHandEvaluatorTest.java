@@ -80,4 +80,26 @@ public class PokerHandEvaluatorTest {
         PokerHand straightHand = new PokerHand(pokerCards);
         assertEquals(Rank.ONE_PAIR,straightHand.getRank());
     }
+
+    @Test
+    public void evaluatesTwoPairHand_Correctly() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.TWO));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.TWO));
+        PokerHand straightHand = new PokerHand(pokerCards);
+        assertEquals(Rank.TWO_PAIR,straightHand.getRank());
+    }
+
+    @Test
+    public void evaluatesFullHouseHand_Correctly() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.SEVEN));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.SEVEN));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.SEVEN));
+        PokerHand straightHand = new PokerHand(pokerCards);
+        assertEquals(Rank.FULL_HOUSE,straightHand.getRank());
+    }
 }

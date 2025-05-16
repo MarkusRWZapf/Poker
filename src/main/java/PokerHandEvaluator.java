@@ -1,6 +1,4 @@
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PokerHandEvaluator {
@@ -14,9 +12,11 @@ public class PokerHandEvaluator {
         Map<Rank, Boolean> rankingMap = new LinkedHashMap<>();
         rankingMap.put(Rank.STRAIGHT_FLUSH, isFlush && isStraight);
         rankingMap.put(Rank.FOUR_OF_A_KIND, valueOccurences.containsValue(4L));
+        rankingMap.put(Rank.FULL_HOUSE, valueOccurences.containsValue(3L) && valueOccurences.containsValue(2L));
         rankingMap.put(Rank.FLUSH, isFlush);
         rankingMap.put(Rank.STRAIGHT, isStraight);
         rankingMap.put(Rank.THREE_OF_A_KIND, valueOccurences.containsValue(3L));
+        rankingMap.put(Rank.TWO_PAIR, Collections.frequency(new ArrayList<>(valueOccurences.values()), 2L) == 2);
         rankingMap.put(Rank.ONE_PAIR, valueOccurences.containsValue(2L));
 
         return rankingMap.entrySet().stream()
