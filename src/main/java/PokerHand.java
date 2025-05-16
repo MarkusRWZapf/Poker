@@ -29,6 +29,8 @@ public class PokerHand implements Comparable<PokerHand> {
         //same rank detected. We need to break the tie.
         return switch (rank) {
             case FOUR_OF_A_KIND -> compareHandsWithMultipleMatches(otherHand, 4);
+            case THREE_OF_A_KIND -> compareHandsWithMultipleMatches(otherHand, 3);
+            case ONE_PAIR ->  compareHandsWithMultipleMatches(otherHand, 2);
             case FLUSH, STRAIGHT, STRAIGHT_FLUSH -> compareCardsDirectlyBetweenTwoHands(otherHand);
             default -> compareCardsDirectlyBetweenTwoHands(otherHand);
         };
@@ -77,7 +79,7 @@ public class PokerHand implements Comparable<PokerHand> {
                 .sorted(Comparator.reverseOrder())
                 .toList();
 
-        //Highest remaining card can already break the tie
+        //Highest remaining card breaks in most the tie
         int result = Integer.compare(thisHandRanked.getFirst().ordinal(), otherHandRanked.getFirst().ordinal());
         if (result != 0) return result;
 
