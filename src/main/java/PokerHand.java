@@ -59,4 +59,16 @@ public class PokerHand {
         return pokerCards.stream().collect(Collectors.groupingBy(PokerCard::getValue, Collectors.counting()));
     }
 
+    public int compareHighCardsWithTheOnesInAnotherHand(PokerHand otherHand) {
+        List<Integer> thisHandValues = cards.stream().map(card -> card.value.ordinal()).sorted(Comparator.reverseOrder()).toList();
+        List<Integer> otherHandValues = otherHand.getCards().stream().map(card -> card.value.ordinal()).sorted(Comparator.reverseOrder()).toList();
+
+        for (int i = 0; i < thisHandValues.size(); i++) {
+            int result = Integer.compare(thisHandValues.get(i), otherHandValues.get(i));
+            if (result != 0) return result;
+        }
+        return 0; // still a tie
+
+    }
+
 }
