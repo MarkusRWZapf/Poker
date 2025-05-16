@@ -3,33 +3,33 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<PokerCard> pokerCardsInHand1 = new ArrayList<>();
-        pokerCardsInHand1.add(new PokerCard(Suit.CLUBS, Value.THREE));
-        pokerCardsInHand1.add(new PokerCard(Suit.DIAMONDS, Value.THREE));
-        pokerCardsInHand1.add(new PokerCard(Suit.HEARTS, Value.SEVEN));
-        pokerCardsInHand1.add(new PokerCard(Suit.SPADES, Value.SEVEN));
-        pokerCardsInHand1.add(new PokerCard(Suit.CLUBS, Value.SEVEN));
+        List<PokerCard> cardsInFirstPokerHand = new ArrayList<>();
+        List<PokerCard> cardsInSecondPokerHand = new ArrayList<>();
+        cardsInFirstPokerHand.add(new PokerCard(Suit.CLUBS, Value.THREE));
+        cardsInFirstPokerHand.add(new PokerCard(Suit.DIAMONDS, Value.THREE));
+        cardsInFirstPokerHand.add(new PokerCard(Suit.HEARTS, Value.SEVEN));
+        cardsInFirstPokerHand.add(new PokerCard(Suit.SPADES, Value.SEVEN));
+        cardsInFirstPokerHand.add(new PokerCard(Suit.CLUBS, Value.SEVEN));
 
-        List<PokerCard> pokerCardsInHand2 = new ArrayList<>();
-        pokerCardsInHand2.add(new PokerCard(Suit.CLUBS, Value.THREE));
-        pokerCardsInHand2.add(new PokerCard(Suit.DIAMONDS, Value.SEVEN));
-        pokerCardsInHand2.add(new PokerCard(Suit.HEARTS, Value.SEVEN));
-        pokerCardsInHand2.add(new PokerCard(Suit.SPADES, Value.SEVEN));
-        pokerCardsInHand2.add(new PokerCard(Suit.CLUBS, Value.SEVEN));
+        cardsInSecondPokerHand.add(new PokerCard(Suit.CLUBS, Value.THREE));
+        cardsInSecondPokerHand.add(new PokerCard(Suit.DIAMONDS, Value.SEVEN));
+        cardsInSecondPokerHand.add(new PokerCard(Suit.HEARTS, Value.SEVEN));
+        cardsInSecondPokerHand.add(new PokerCard(Suit.SPADES, Value.SEVEN));
+        cardsInSecondPokerHand.add(new PokerCard(Suit.CLUBS, Value.SEVEN));
 
-        PokerHand PokerHand1 = new PokerHand(pokerCardsInHand1);
-        PokerHand PokerHand2 = new PokerHand(pokerCardsInHand2);
+        PokerHand firstPokerHand = new PokerHand(cardsInFirstPokerHand);
+        PokerHand secondPokerHand = new PokerHand(cardsInSecondPokerHand);
 
-        System.out.println("Hand 1: " + PokerHand1.getRank());
-        System.out.println("Hand 2: " + PokerHand2.getRank());
+        System.out.println("Rank of first PokerHand: " + firstPokerHand.getRank());
+        System.out.println("Rank of second PokerHand: " + secondPokerHand.getRank());
 
-        int result = PokerHand1.getRank().compareTo(PokerHand2.getRank());
+        int result = firstPokerHand.compareTo(secondPokerHand);
         if (result > 0) {
-            System.out.println("Hand 1 wins!");
+            System.out.println("First PokerHand wins!");
         } else if (result < 0) {
-            System.out.println("Hand 2 wins!");
+            System.out.println("Second PokerHand wins!");
         } else {
-            System.out.println("It's a tie!");
+            System.out.println("Alas, it's a tie!");
         }
 
     }

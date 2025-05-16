@@ -8,14 +8,25 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-public class PokerHand {
+public class PokerHand implements Comparable<PokerHand> {
     private final List<PokerCard> cards;
 
     private Rank rank;
 
     public PokerHand(List<PokerCard> cards) {
+        if (cards.size() != 5) {
+            throw new IllegalArgumentException("You need 5 cards to play!");
+        }
         this.cards = cards;
         this.rank = rankCardsInHand(cards);
+    }
+
+    @Override
+    public int compareTo(PokerHand other) {
+        int rankComparison = Integer.compare(this.rank.ordinal(), other.rank.ordinal());
+        if (rankComparison != 0) return rankComparison;
+
+        return compareHighCardsWithTheOnesInAnotherHand(other);
     }
 
     public Rank rankCardsInHand(List<PokerCard> pokerCards) {

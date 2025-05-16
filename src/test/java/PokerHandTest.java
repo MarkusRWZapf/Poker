@@ -153,4 +153,24 @@ public class PokerHandTest {
         assertEquals(0, firstHand.compareHighCardsWithTheOnesInAnotherHand(secondHand));
     }
 
+    @Test
+    public void comparesTwoPokerHandsWithTheFirstOneTheWinner() {
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.THREE));
+        pokerCards.add(new PokerCard(Suit.DIAMONDS, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.HEARTS, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.SPADES, Value.QUEEN));
+        pokerCards.add(new PokerCard(Suit.CLUBS, Value.QUEEN));
+
+        List<PokerCard> otherPokerCards = new ArrayList<>();
+        otherPokerCards.add(new PokerCard(Suit.SPADES, Value.NINE));
+        otherPokerCards.add(new PokerCard(Suit.CLUBS, Value.ACE));
+        otherPokerCards.add(new PokerCard(Suit.CLUBS, Value.NINE));
+        otherPokerCards.add(new PokerCard(Suit.HEARTS, Value.ACE));
+        otherPokerCards.add(new PokerCard(Suit.DIAMONDS, Value.NINE));
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(1, firstHand.compareTo(secondHand));
+
+    }
+
 }
