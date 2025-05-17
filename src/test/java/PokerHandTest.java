@@ -2,9 +2,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PokerHandTest {
 
@@ -89,7 +91,7 @@ public class PokerHandTest {
     }
 
     @Test
-    public void evaluates_EachRank_Correctly() {
+    public void evaluates_Each_Rank_Correctly() {
         assertEquals(Rank.STRAIGHT_FLUSH, straight_Flush_Hand.getRank());
         assertEquals(Rank.FOUR_OF_A_KIND, four_Of_A_Kind_Hand.getRank());
         assertEquals(Rank.FULL_HOUSE, full_House_Hand.getRank());
@@ -114,7 +116,346 @@ public class PokerHandTest {
     }
 
     @Test
-    public void compares_Two_HighCard_Ranked_Hands_Clear_Winner() {
+    public void pokerHand_Is_Only_Valid_With_Exactly_5_Cards() {
+        List<PokerCard> emptyHand = Collections.emptyList();
+        List<PokerCard> fourCardHand = List.of(
+                new PokerCard(Suit.SPADES, Value.ACE),
+                new PokerCard(Suit.CLUBS, Value.TEN),
+                new PokerCard(Suit.CLUBS, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.FOUR)
+        );
+        List<PokerCard> sixCardHand = List.of(
+                new PokerCard(Suit.SPADES, Value.ACE),
+                new PokerCard(Suit.CLUBS, Value.TEN),
+                new PokerCard(Suit.CLUBS, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.FOUR),
+                new PokerCard(Suit.HEARTS, Value.ACE),
+                new PokerCard(Suit.DIAMONDS, Value.FIVE)
+        );
+        assertThrows(IllegalArgumentException.class, () -> new PokerHand(emptyHand));
+        assertThrows(IllegalArgumentException.class, () -> new PokerHand(fourCardHand));
+        assertThrows(IllegalArgumentException.class, () -> new PokerHand(sixCardHand));
+    }
+
+    //Tiebreaker Tests
+
+    @Test
+    public void tie_Break_In_Rank_StraightFlush() {
+        pokerCards = List.of(
+                new PokerCard(Suit.DIAMONDS, Value.THREE),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.DIAMONDS, Value.FIVE),
+                new PokerCard(Suit.DIAMONDS, Value.FOUR),
+                new PokerCard(Suit.DIAMONDS, Value.SEVEN));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.HEARTS, Value.QUEEN),
+                new PokerCard(Suit.HEARTS, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.TEN),
+                new PokerCard(Suit.HEARTS, Value.JACK),
+                new PokerCard(Suit.HEARTS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Stand_In_Rank_StraightFlush() {
+        pokerCards = List.of(
+                new PokerCard(Suit.DIAMONDS, Value.KING),
+                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
+                new PokerCard(Suit.DIAMONDS, Value.TEN),
+                new PokerCard(Suit.DIAMONDS, Value.NINE),
+                new PokerCard(Suit.DIAMONDS, Value.JACK));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.HEARTS, Value.QUEEN),
+                new PokerCard(Suit.HEARTS, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.TEN),
+                new PokerCard(Suit.HEARTS, Value.JACK),
+                new PokerCard(Suit.HEARTS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(0, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Four_Of_A_Kind() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.ACE),
+                new PokerCard(Suit.DIAMONDS, Value.NINE),
+                new PokerCard(Suit.HEARTS, Value.NINE),
+                new PokerCard(Suit.SPADES, Value.NINE),
+                new PokerCard(Suit.CLUBS, Value.NINE));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.TEN),
+                new PokerCard(Suit.CLUBS, Value.FIVE),
+                new PokerCard(Suit.CLUBS, Value.TEN),
+                new PokerCard(Suit.HEARTS, Value.TEN),
+                new PokerCard(Suit.DIAMONDS, Value.TEN));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Full_House() {
+        pokerCards = List.of(
+                new PokerCard(Suit.DIAMONDS, Value.TWO),
+                new PokerCard(Suit.DIAMONDS, Value.JACK),
+                new PokerCard(Suit.HEARTS, Value.TWO),
+                new PokerCard(Suit.SPADES, Value.JACK),
+                new PokerCard(Suit.CLUBS, Value.TWO));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
+                new PokerCard(Suit.SPADES, Value.QUEEN),
+                new PokerCard(Suit.SPADES, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.SIX),
+                new PokerCard(Suit.DIAMONDS, Value.SIX));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Flush() {
+        pokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.THREE),
+                new PokerCard(Suit.SPADES, Value.SIX),
+                new PokerCard(Suit.SPADES, Value.NINE),
+                new PokerCard(Suit.SPADES, Value.FOUR),
+                new PokerCard(Suit.SPADES, Value.SEVEN));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.DIAMONDS, Value.EIGHT),
+                new PokerCard(Suit.DIAMONDS, Value.TWO),
+                new PokerCard(Suit.DIAMONDS, Value.TEN),
+                new PokerCard(Suit.DIAMONDS, Value.JACK),
+                new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Stand_In_Rank_Flush() {
+        pokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.NINE),
+                new PokerCard(Suit.SPADES, Value.JACK),
+                new PokerCard(Suit.SPADES, Value.TEN),
+                new PokerCard(Suit.SPADES, Value.TWO),
+                new PokerCard(Suit.SPADES, Value.EIGHT));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.DIAMONDS, Value.EIGHT),
+                new PokerCard(Suit.DIAMONDS, Value.TWO),
+                new PokerCard(Suit.DIAMONDS, Value.TEN),
+                new PokerCard(Suit.DIAMONDS, Value.JACK),
+                new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(0, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Straight() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.THREE),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.FIVE),
+                new PokerCard(Suit.SPADES, Value.FOUR),
+                new PokerCard(Suit.CLUBS, Value.SEVEN));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.QUEEN),
+                new PokerCard(Suit.CLUBS, Value.KING),
+                new PokerCard(Suit.CLUBS, Value.TEN),
+                new PokerCard(Suit.HEARTS, Value.JACK),
+                new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Stand_In_Rank_Straight() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.THREE),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.FIVE),
+                new PokerCard(Suit.SPADES, Value.FOUR),
+                new PokerCard(Suit.CLUBS, Value.SEVEN));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.SIX),
+                new PokerCard(Suit.CLUBS, Value.FIVE),
+                new PokerCard(Suit.CLUBS, Value.SEVEN),
+                new PokerCard(Suit.HEARTS, Value.FOUR),
+                new PokerCard(Suit.DIAMONDS, Value.THREE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(0, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Three_Of_A_Kind() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.THREE),
+                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
+                new PokerCard(Suit.HEARTS, Value.FIVE),
+                new PokerCard(Suit.SPADES, Value.QUEEN),
+                new PokerCard(Suit.CLUBS, Value.QUEEN));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.NINE),
+                new PokerCard(Suit.CLUBS, Value.ACE),
+                new PokerCard(Suit.CLUBS, Value.NINE),
+                new PokerCard(Suit.HEARTS, Value.FOUR),
+                new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Two_Pair_with_HigherPair() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.THREE),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.THREE),
+                new PokerCard(Suit.SPADES, Value.SEVEN),
+                new PokerCard(Suit.CLUBS, Value.SEVEN));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.QUEEN),
+                new PokerCard(Suit.CLUBS, Value.FOUR),
+                new PokerCard(Suit.CLUBS, Value.QUEEN),
+                new PokerCard(Suit.HEARTS, Value.FOUR),
+                new PokerCard(Suit.DIAMONDS, Value.THREE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Two_Pair_with_LowerPair() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.NINE),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.JACK),
+                new PokerCard(Suit.SPADES, Value.JACK),
+                new PokerCard(Suit.CLUBS, Value.NINE));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.EIGHT),
+                new PokerCard(Suit.CLUBS, Value.FOUR),
+                new PokerCard(Suit.CLUBS, Value.JACK),
+                new PokerCard(Suit.HEARTS, Value.FOUR),
+                new PokerCard(Suit.DIAMONDS, Value.JACK));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_Two_Pair_with_Kicker() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.KING),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.KING),
+                new PokerCard(Suit.SPADES, Value.JACK),
+                new PokerCard(Suit.CLUBS, Value.SIX));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.EIGHT),
+                new PokerCard(Suit.SPADES, Value.SIX),
+                new PokerCard(Suit.SPADES, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.SIX),
+                new PokerCard(Suit.DIAMONDS, Value.KING));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Stand_In_Rank_Two_Pair() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.KING),
+                new PokerCard(Suit.DIAMONDS, Value.SIX),
+                new PokerCard(Suit.HEARTS, Value.KING),
+                new PokerCard(Suit.DIAMONDS, Value.JACK),
+                new PokerCard(Suit.CLUBS, Value.SIX));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.JACK),
+                new PokerCard(Suit.SPADES, Value.SIX),
+                new PokerCard(Suit.SPADES, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.SIX),
+                new PokerCard(Suit.DIAMONDS, Value.KING));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(0, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_One_Pair() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.TWO),
+                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
+                new PokerCard(Suit.HEARTS, Value.FIVE),
+                new PokerCard(Suit.SPADES, Value.QUEEN),
+                new PokerCard(Suit.CLUBS, Value.THREE));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.FIVE),
+                new PokerCard(Suit.HEARTS, Value.QUEEN),
+                new PokerCard(Suit.CLUBS, Value.KING),
+                new PokerCard(Suit.CLUBS, Value.QUEEN),
+                new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Stand_In_Rank_One_Pair() {
+        pokerCards = List.of(
+                new PokerCard(Suit.CLUBS, Value.TWO),
+                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
+                new PokerCard(Suit.HEARTS, Value.FIVE),
+                new PokerCard(Suit.SPADES, Value.QUEEN),
+                new PokerCard(Suit.CLUBS, Value.THREE));
+
+        List<PokerCard> otherPokerCards = List.of(
+                new PokerCard(Suit.SPADES, Value.FIVE),
+                new PokerCard(Suit.HEARTS, Value.QUEEN),
+                new PokerCard(Suit.DIAMONDS, Value.TWO),
+                new PokerCard(Suit.CLUBS, Value.QUEEN),
+                new PokerCard(Suit.DIAMONDS, Value.THREE));
+
+        PokerHand firstHand = new PokerHand(pokerCards);
+        PokerHand secondHand = new PokerHand(otherPokerCards);
+        assertEquals(0, firstHand.compareTo(secondHand));
+    }
+
+    @Test
+    public void tie_Break_In_Rank_HighCard() {
         pokerCards = List.of(
                 new PokerCard(Suit.CLUBS, Value.ACE),
                 new PokerCard(Suit.DIAMONDS, Value.EIGHT),
@@ -136,7 +477,7 @@ public class PokerHandTest {
     }
 
     @Test
-    public void compares_Two_HighCard_Ranked_Hands_Ends_In_A_Tie() {
+    public void tie_Stand_In_Rank_HighCard() {
         pokerCards = List.of(
                 new PokerCard(Suit.CLUBS, Value.ACE),
                 new PokerCard(Suit.DIAMONDS, Value.EIGHT),
@@ -155,301 +496,4 @@ public class PokerHandTest {
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareCardsDirectlyBetweenTwoHands(secondHand));
     }
-
-    //Tiebreaker Tests
-
-    @Test
-    public void TieBreakInRank_StraightFlush() {
-        pokerCards = List.of(
-                new PokerCard(Suit.DIAMONDS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.DIAMONDS, Value.FIVE),
-                new PokerCard(Suit.DIAMONDS, Value.FOUR),
-                new PokerCard(Suit.DIAMONDS, Value.SEVEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.HEARTS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.KING),
-                new PokerCard(Suit.HEARTS, Value.TEN),
-                new PokerCard(Suit.HEARTS, Value.JACK),
-                new PokerCard(Suit.HEARTS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieStandInRank_StraightFlush() {
-        pokerCards = List.of(
-                new PokerCard(Suit.DIAMONDS, Value.KING),
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.DIAMONDS, Value.TEN),
-                new PokerCard(Suit.DIAMONDS, Value.NINE),
-                new PokerCard(Suit.DIAMONDS, Value.JACK));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.HEARTS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.KING),
-                new PokerCard(Suit.HEARTS, Value.TEN),
-                new PokerCard(Suit.HEARTS, Value.JACK),
-                new PokerCard(Suit.HEARTS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(0, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Four_Of_A_Kind() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.ACE),
-                new PokerCard(Suit.DIAMONDS, Value.NINE),
-                new PokerCard(Suit.HEARTS, Value.NINE),
-                new PokerCard(Suit.SPADES, Value.NINE),
-                new PokerCard(Suit.CLUBS, Value.NINE));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.TEN),
-                new PokerCard(Suit.CLUBS, Value.FIVE),
-                new PokerCard(Suit.CLUBS, Value.TEN),
-                new PokerCard(Suit.HEARTS, Value.TEN),
-                new PokerCard(Suit.DIAMONDS, Value.TEN));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Three_Of_A_Kind() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.QUEEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.NINE),
-                new PokerCard(Suit.CLUBS, Value.ACE),
-                new PokerCard(Suit.CLUBS, Value.NINE),
-                new PokerCard(Suit.HEARTS, Value.FOUR),
-                new PokerCard(Suit.DIAMONDS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_One_Pair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.TWO),
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.THREE));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.FIVE),
-                new PokerCard(Suit.HEARTS, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.KING),
-                new PokerCard(Suit.CLUBS, Value.QUEEN),
-                new PokerCard(Suit.DIAMONDS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieStandInRank_One_Pair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.TWO),
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.THREE));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.FIVE),
-                new PokerCard(Suit.HEARTS, Value.QUEEN),
-                new PokerCard(Suit.DIAMONDS, Value.TWO),
-                new PokerCard(Suit.CLUBS, Value.QUEEN),
-                new PokerCard(Suit.DIAMONDS, Value.THREE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(0, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Flush() {
-        pokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.THREE),
-                new PokerCard(Suit.SPADES, Value.SIX),
-                new PokerCard(Suit.SPADES, Value.NINE),
-                new PokerCard(Suit.SPADES, Value.FOUR),
-                new PokerCard(Suit.SPADES, Value.SEVEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.DIAMONDS, Value.EIGHT),
-                new PokerCard(Suit.DIAMONDS, Value.TWO),
-                new PokerCard(Suit.DIAMONDS, Value.TEN),
-                new PokerCard(Suit.DIAMONDS, Value.JACK),
-                new PokerCard(Suit.DIAMONDS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Straight() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.SPADES, Value.FOUR),
-                new PokerCard(Suit.CLUBS, Value.SEVEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.KING),
-                new PokerCard(Suit.CLUBS, Value.TEN),
-                new PokerCard(Suit.HEARTS, Value.JACK),
-                new PokerCard(Suit.DIAMONDS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieStandInRank_Straight() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.SPADES, Value.FOUR),
-                new PokerCard(Suit.CLUBS, Value.SEVEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.SIX),
-                new PokerCard(Suit.CLUBS, Value.FIVE),
-                new PokerCard(Suit.CLUBS, Value.SEVEN),
-                new PokerCard(Suit.HEARTS, Value.FOUR),
-                new PokerCard(Suit.DIAMONDS, Value.THREE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(0, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Two_Pair_with_HigherPair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.THREE),
-                new PokerCard(Suit.SPADES, Value.SEVEN),
-                new PokerCard(Suit.CLUBS, Value.SEVEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.FOUR),
-                new PokerCard(Suit.CLUBS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.FOUR),
-                new PokerCard(Suit.DIAMONDS, Value.THREE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Two_Pair_with_LowerPair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.NINE),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.JACK),
-                new PokerCard(Suit.SPADES, Value.JACK),
-                new PokerCard(Suit.CLUBS, Value.NINE));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.EIGHT),
-                new PokerCard(Suit.CLUBS, Value.FOUR),
-                new PokerCard(Suit.CLUBS, Value.JACK),
-                new PokerCard(Suit.HEARTS, Value.FOUR),
-                new PokerCard(Suit.DIAMONDS, Value.JACK));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Two_Pair_with_Kicker() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.KING),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.KING),
-                new PokerCard(Suit.SPADES, Value.JACK),
-                new PokerCard(Suit.CLUBS, Value.SIX));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.EIGHT),
-                new PokerCard(Suit.SPADES, Value.SIX),
-                new PokerCard(Suit.SPADES, Value.KING),
-                new PokerCard(Suit.HEARTS, Value.SIX),
-                new PokerCard(Suit.DIAMONDS, Value.KING));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieStandInRank_Two_Pair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.KING),
-                new PokerCard(Suit.DIAMONDS, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.KING),
-                new PokerCard(Suit.DIAMONDS, Value.JACK),
-                new PokerCard(Suit.CLUBS, Value.SIX));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.JACK),
-                new PokerCard(Suit.SPADES, Value.SIX),
-                new PokerCard(Suit.SPADES, Value.KING),
-                new PokerCard(Suit.HEARTS, Value.SIX),
-                new PokerCard(Suit.DIAMONDS, Value.KING));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(0, firstHand.compareTo(secondHand));
-    }
-
-    @Test
-    public void TieBreakInRank_Full_House() {
-        pokerCards = List.of(
-                new PokerCard(Suit.DIAMONDS, Value.TWO),
-                new PokerCard(Suit.DIAMONDS, Value.JACK),
-                new PokerCard(Suit.HEARTS, Value.TWO),
-                new PokerCard(Suit.SPADES, Value.JACK),
-                new PokerCard(Suit.CLUBS, Value.TWO));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.SPADES, Value.SIX),
-                new PokerCard(Suit.HEARTS, Value.SIX),
-                new PokerCard(Suit.DIAMONDS, Value.SIX));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
-    }
-
 }
