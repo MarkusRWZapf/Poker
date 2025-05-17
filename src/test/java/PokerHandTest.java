@@ -12,10 +12,10 @@ public class PokerHandTest {
 
     List<PokerCard> straight_Flush_Cards= List.of(
             new PokerCard(Suit.SPADES, Value.THREE),
-                new PokerCard(Suit.SPADES, Value.SIX),
-                new PokerCard(Suit.SPADES, Value.FOUR),
-                new PokerCard(Suit.SPADES, Value.SEVEN),
-                new PokerCard(Suit.SPADES, Value.FIVE));
+            new PokerCard(Suit.SPADES, Value.SIX),
+            new PokerCard(Suit.SPADES, Value.FOUR),
+            new PokerCard(Suit.SPADES, Value.SEVEN),
+            new PokerCard(Suit.SPADES, Value.FIVE));
 
     List<PokerCard> four_Of_A_Kind_Cards = List.of(
             new PokerCard(Suit.SPADES, Value.TEN),
