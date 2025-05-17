@@ -28,9 +28,10 @@ public class PokerHand implements Comparable<PokerHand> {
 
         //same rank detected. We need to break the tie.
         return switch (rank) {
-            case FOUR_OF_A_KIND -> compareHandsWithMultipleMatches(otherHand, 4);
-            case THREE_OF_A_KIND -> compareHandsWithMultipleMatches(otherHand, 3);
-            case ONE_PAIR ->  compareHandsWithMultipleMatches(otherHand, 2);
+            case FOUR_OF_A_KIND -> breakTieBetweenHandsThatHaveMultipleMatches(otherHand, 4);
+            case FULL_HOUSE, THREE_OF_A_KIND -> breakTieBetweenHandsThatHaveMultipleMatches(otherHand, 3);
+            case TWO_PAIR -> breakTieOnRankTwoPair(otherHand);
+            case ONE_PAIR ->  breakTieBetweenHandsThatHaveMultipleMatches(otherHand, 2);
             case FLUSH, STRAIGHT, STRAIGHT_FLUSH -> compareCardsDirectlyBetweenTwoHands(otherHand);
             default -> compareCardsDirectlyBetweenTwoHands(otherHand);
         };
@@ -63,7 +64,29 @@ public class PokerHand implements Comparable<PokerHand> {
         return pokerCards.stream().collect(Collectors.groupingBy(PokerCard::getValue, Collectors.counting()));
     }
 
-    private int compareHandsWithMultipleMatches(PokerHand otherHand, int matchCount) {
+    private int breakTieOnRankTwoPair(PokerHand otherHand) {
+        List<Value> thisPairs = countValueOccurences(cards).entrySet().stream()
+                .filter(entry -> entry.getValue() == 2)
+                .map(Map.Entry::getKey)
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        List<Value> otherPairs = otherHand.countValueOccurences(otherHand.cards).entrySet().stream()
+                .filter(entry -> entry.getValue() == 2)
+                .map(Map.Entry::getKey)
+                .sorted(Comparator.reverseOrder())
+                .toList();
+
+        int firstPairComparison = Integer.compare(thisPairs.get(0).ordinal(), otherPairs.get(0).ordinal());
+        if (firstPairComparison != 0) return firstPairComparison;
+
+        int secondPairComparison = Integer.compare(thisPairs.get(1).ordinal(), otherPairs.get(1).ordinal());
+        if (secondPairComparison != 0) return secondPairComparison;
+
+        return compareCardsDirectlyBetweenTwoHands(otherHand);
+    }
+
+    private int breakTieBetweenHandsThatHaveMultipleMatches(PokerHand otherHand, int matchCount) {
         Map<Value, Long> thisHandValueCounts = countValueOccurences(cards);
         Map<Value, Long> otherHandValueCounts = countValueOccurences(otherHand.cards);
 
@@ -79,11 +102,11 @@ public class PokerHand implements Comparable<PokerHand> {
                 .sorted(Comparator.reverseOrder())
                 .toList();
 
-        //Highest remaining card breaks in most the tie
+        //Highest remaining card should break most ties
         int result = Integer.compare(thisHandRanked.getFirst().ordinal(), otherHandRanked.getFirst().ordinal());
         if (result != 0) return result;
 
-        //Remaining cards need to be compared to break the tie
+        //All cards need to be compared to break the tie
         return compareCardsDirectlyBetweenTwoHands(otherHand);
     }
 
@@ -105,7 +128,7 @@ public class PokerHand implements Comparable<PokerHand> {
             int result = Integer.compare(thisHandValues.get(i), otherHandValues.get(i));
             if (result != 0) return result;
         }
-        return 0; // Still a tie
+        return 0; // Genuine tie
     }
 
     private boolean isFlush (List<PokerCard> pokerCards) {
