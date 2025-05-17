@@ -29,10 +29,11 @@ public class PokerHand implements Comparable<PokerHand> {
         //same rank detected. We need to break the tie.
         return switch (rank) {
             case FOUR_OF_A_KIND -> breakTieBetweenHandsThatHaveMultipleMatches(otherHand, 4);
+            //Ties on FULL_HOUSE and THREE_OF_A_KIND can be broken by looking at the value of the triple
             case FULL_HOUSE, THREE_OF_A_KIND -> breakTieBetweenHandsThatHaveMultipleMatches(otherHand, 3);
             case TWO_PAIR -> breakTieOnRankTwoPair(otherHand);
             case ONE_PAIR ->  breakTieBetweenHandsThatHaveMultipleMatches(otherHand, 2);
-            case FLUSH, STRAIGHT, STRAIGHT_FLUSH -> compareCardsDirectlyBetweenTwoHands(otherHand);
+            //Ties on FLUSH, STRAIGHT, STRAIGHT_FLUSH can be broken by comparing all cards directly
             default -> compareCardsDirectlyBetweenTwoHands(otherHand);
         };
     }

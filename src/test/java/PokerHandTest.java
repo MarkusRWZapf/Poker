@@ -10,109 +10,111 @@ public class PokerHandTest {
 
     private List<PokerCard> pokerCards = new ArrayList<>();
 
+    List<PokerCard> straight_Flush_Cards= List.of(
+            new PokerCard(Suit.SPADES, Value.THREE),
+                new PokerCard(Suit.SPADES, Value.SIX),
+                new PokerCard(Suit.SPADES, Value.FOUR),
+                new PokerCard(Suit.SPADES, Value.SEVEN),
+                new PokerCard(Suit.SPADES, Value.FIVE));
+
+    List<PokerCard> four_Of_A_Kind_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.TEN),
+            new PokerCard(Suit.CLUBS, Value.TEN),
+            new PokerCard(Suit.CLUBS, Value.NINE),
+            new PokerCard(Suit.HEARTS, Value.TEN),
+            new PokerCard(Suit.DIAMONDS, Value.TEN));
+
+    List<PokerCard> full_House_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.ACE),
+            new PokerCard(Suit.CLUBS, Value.ACE),
+            new PokerCard(Suit.CLUBS, Value.NINE),
+            new PokerCard(Suit.HEARTS, Value.NINE),
+            new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+    List<PokerCard> flush_Cards = List.of(
+            new PokerCard(Suit.DIAMONDS, Value.QUEEN),
+            new PokerCard(Suit.DIAMONDS, Value.TWO),
+            new PokerCard(Suit.DIAMONDS, Value.FIVE),
+            new PokerCard(Suit.DIAMONDS, Value.TEN),
+            new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+    List<PokerCard> straight_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.SIX),
+            new PokerCard(Suit.CLUBS, Value.FOUR),
+            new PokerCard(Suit.CLUBS, Value.THREE),
+            new PokerCard(Suit.HEARTS, Value.FIVE),
+            new PokerCard(Suit.DIAMONDS, Value.SEVEN));
+
+    List<PokerCard> three_Of_A_Kind_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.NINE),
+            new PokerCard(Suit.CLUBS, Value.SEVEN),
+            new PokerCard(Suit.CLUBS, Value.NINE),
+            new PokerCard(Suit.HEARTS, Value.TWO),
+            new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+    List<PokerCard> two_Pairs_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.SEVEN),
+            new PokerCard(Suit.CLUBS, Value.ACE),
+            new PokerCard(Suit.CLUBS, Value.SEVEN),
+            new PokerCard(Suit.HEARTS, Value.ACE),
+            new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+    List<PokerCard> one_Pair_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.NINE),
+            new PokerCard(Suit.CLUBS, Value.FOUR),
+            new PokerCard(Suit.CLUBS, Value.THREE),
+            new PokerCard(Suit.HEARTS, Value.EIGHT),
+            new PokerCard(Suit.DIAMONDS, Value.NINE));
+
+    List<PokerCard> high_Cards = List.of(
+            new PokerCard(Suit.SPADES, Value.ACE),
+            new PokerCard(Suit.CLUBS, Value.TEN),
+            new PokerCard(Suit.CLUBS, Value.KING),
+            new PokerCard(Suit.HEARTS, Value.FOUR),
+            new PokerCard(Suit.DIAMONDS, Value.FIVE));
+
+    PokerHand straight_Flush_Hand = new PokerHand(straight_Flush_Cards);
+    PokerHand four_Of_A_Kind_Hand = new PokerHand(four_Of_A_Kind_Cards);
+    PokerHand full_House_Hand = new PokerHand(full_House_Cards);
+    PokerHand flush_Hand = new PokerHand(flush_Cards);
+    PokerHand straight_Hand = new PokerHand(straight_Cards);
+    PokerHand three_Of_A_Kind_Hand = new PokerHand(three_Of_A_Kind_Cards);
+    PokerHand two_Pairs_Hand = new PokerHand(two_Pairs_Cards);
+    PokerHand one_Pair_Hand = new PokerHand(one_Pair_Cards);
+    PokerHand high_Hand = new PokerHand(high_Cards);
+
     @BeforeEach
     public void setUp() {
         pokerCards = new ArrayList<>();
     }
 
     @Test
-    public void evaluates_Straight() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.EIGHT),
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.SPADES, Value.TEN),
-                new PokerCard(Suit.SPADES, Value.JACK),
-                new PokerCard(Suit.SPADES, Value.NINE));
-        PokerHand straightHand = new PokerHand(pokerCards);
-        assertEquals(Rank.STRAIGHT, straightHand.getRank());
+    public void evaluates_EachRank_Correctly() {
+        assertEquals(Rank.STRAIGHT_FLUSH, straight_Flush_Hand.getRank());
+        assertEquals(Rank.FOUR_OF_A_KIND, four_Of_A_Kind_Hand.getRank());
+        assertEquals(Rank.FULL_HOUSE, full_House_Hand.getRank());
+        assertEquals(Rank.FLUSH, flush_Hand.getRank());
+        assertEquals(Rank.STRAIGHT, straight_Hand.getRank());
+        assertEquals(Rank.THREE_OF_A_KIND, three_Of_A_Kind_Hand.getRank());
+        assertEquals(Rank.TWO_PAIR, two_Pairs_Hand.getRank());
+        assertEquals(Rank.ONE_PAIR, one_Pair_Hand.getRank());
+        assertEquals(Rank.HIGH_CARD, high_Hand.getRank());
     }
 
     @Test
-    public void evaluates_StraightFlush() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.JACK),
-                new PokerCard(Suit.CLUBS, Value.NINE),
-                new PokerCard(Suit.CLUBS, Value.TEN),
-                new PokerCard(Suit.CLUBS, Value.EIGHT),
-                new PokerCard(Suit.CLUBS, Value.SEVEN));
-        PokerHand straightFlushHand = new PokerHand(pokerCards);
-        assertEquals(Rank.STRAIGHT_FLUSH, straightFlushHand.getRank());
+    public void compares_Differently_Ranked_PokerHands() {
+        assertEquals(1, straight_Flush_Hand.compareTo(four_Of_A_Kind_Hand));
+        assertEquals(1, four_Of_A_Kind_Hand.compareTo(full_House_Hand));
+        assertEquals(1, full_House_Hand.compareTo(flush_Hand));
+        assertEquals(1, flush_Hand.compareTo(straight_Hand));
+        assertEquals(1, straight_Hand.compareTo(three_Of_A_Kind_Hand));
+        assertEquals(1, three_Of_A_Kind_Hand.compareTo(two_Pairs_Hand));
+        assertEquals(1, two_Pairs_Hand.compareTo(one_Pair_Hand));
+        assertEquals(1, one_Pair_Hand.compareTo(high_Hand));
     }
 
     @Test
-    public void evaluates_Four_Of_A_Kind() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.JACK),
-                new PokerCard(Suit.DIAMONDS, Value.NINE),
-                new PokerCard(Suit.HEARTS, Value.NINE),
-                new PokerCard(Suit.SPADES, Value.NINE),
-                new PokerCard(Suit.CLUBS, Value.NINE));
-        PokerHand fourOfAKindHand = new PokerHand(pokerCards);
-        assertEquals(Rank.FOUR_OF_A_KIND, fourOfAKindHand.getRank());
-    }
-
-    @Test
-    public void evaluates_Three_Of_A_Kind() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.JACK),
-                new PokerCard(Suit.DIAMONDS, Value.THREE),
-                new PokerCard(Suit.HEARTS, Value.JACK),
-                new PokerCard(Suit.SPADES, Value.JACK),
-                new PokerCard(Suit.CLUBS, Value.NINE));
-        PokerHand threeOfAKindHand = new PokerHand(pokerCards);
-        assertEquals(Rank.THREE_OF_A_KIND, threeOfAKindHand.getRank());
-    }
-
-    @Test
-    public void evaluates_One_Pair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.QUEEN),
-                new PokerCard(Suit.DIAMONDS, Value.THREE),
-                new PokerCard(Suit.HEARTS, Value.SEVEN),
-                new PokerCard(Suit.SPADES, Value.SEVEN),
-                new PokerCard(Suit.CLUBS, Value.NINE));
-        PokerHand pairHand = new PokerHand(pokerCards);
-        assertEquals(Rank.ONE_PAIR, pairHand.getRank());
-    }
-
-    @Test
-    public void evaluates_Two_Pair() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.QUEEN),
-                new PokerCard(Suit.DIAMONDS, Value.THREE),
-                new PokerCard(Suit.HEARTS, Value.QUEEN),
-                new PokerCard(Suit.SPADES, Value.TWO),
-                new PokerCard(Suit.CLUBS, Value.TWO));
-        PokerHand twoPairHand = new PokerHand(pokerCards);
-        assertEquals(Rank.TWO_PAIR, twoPairHand.getRank());
-    }
-
-    @Test
-    public void evaluates_Full_House() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.THREE),
-                new PokerCard(Suit.HEARTS, Value.SEVEN),
-                new PokerCard(Suit.SPADES, Value.SEVEN),
-                new PokerCard(Suit.CLUBS, Value.SEVEN));
-        PokerHand fullHouseHand = new PokerHand(pokerCards);
-        assertEquals(Rank.FULL_HOUSE, fullHouseHand.getRank());
-    }
-
-    @Test
-    public void evaluates_High_Card() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.ACE),
-                new PokerCard(Suit.DIAMONDS, Value.EIGHT),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.SPADES, Value.KING),
-                new PokerCard(Suit.CLUBS, Value.TWO));
-        PokerHand highCardHand = new PokerHand(pokerCards);
-        assertEquals(Rank.HIGH_CARD, highCardHand.getRank());
-    }
-
-    @Test
-    public void evaluates_HighCardAgainstAnotherHand_ClearWinner() {
+    public void compares_Two_HighCard_Ranked_Hands_Clear_Winner() {
         pokerCards = List.of(
                 new PokerCard(Suit.CLUBS, Value.ACE),
                 new PokerCard(Suit.DIAMONDS, Value.EIGHT),
@@ -134,7 +136,7 @@ public class PokerHandTest {
     }
 
     @Test
-    public void evaluatesHighCardAgainstAnotherHand_EndsInATie() {
+    public void compares_Two_HighCard_Ranked_Hands_Ends_In_A_Tie() {
         pokerCards = List.of(
                 new PokerCard(Suit.CLUBS, Value.ACE),
                 new PokerCard(Suit.DIAMONDS, Value.EIGHT),
@@ -152,27 +154,6 @@ public class PokerHandTest {
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareCardsDirectlyBetweenTwoHands(secondHand));
-    }
-
-    @Test
-    public void comparesTwoPokerHandsWithTheFirstOneTheWinner() {
-        pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.THREE),
-                new PokerCard(Suit.DIAMONDS, Value.QUEEN),
-                new PokerCard(Suit.HEARTS, Value.QUEEN),
-                new PokerCard(Suit.SPADES, Value.QUEEN),
-                new PokerCard(Suit.CLUBS, Value.QUEEN));
-
-        List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.NINE),
-                new PokerCard(Suit.CLUBS, Value.ACE),
-                new PokerCard(Suit.CLUBS, Value.NINE),
-                new PokerCard(Suit.HEARTS, Value.ACE),
-                new PokerCard(Suit.DIAMONDS, Value.NINE));
-
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
     }
 
     //Tiebreaker Tests
@@ -470,6 +451,5 @@ public class PokerHandTest {
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(-1, firstHand.compareTo(secondHand));
     }
-
 
 }
