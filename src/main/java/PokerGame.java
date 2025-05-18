@@ -6,19 +6,19 @@ import java.util.Set;
 public class PokerGame {
     public static void main(String[] args) {
         List<PokerCard> cardsInFirstPokerHand =List.of(
-        new PokerCard(Suit.CLUBS, Value.THREE),
-        new PokerCard(Suit.DIAMONDS, Value.SEVEN),
-        new PokerCard(Suit.HEARTS, Value.SEVEN),
+        new PokerCard(Suit.DIAMONDS, Value.THREE),
+        new PokerCard(Suit.DIAMONDS, Value.JACK),
+        new PokerCard(Suit.HEARTS, Value.KING),
         new PokerCard(Suit.SPADES, Value.SEVEN),
         new PokerCard(Suit.CLUBS, Value.SEVEN)
         );
 
         List<PokerCard> cardsInSecondPokerHand = List.of(
         new PokerCard(Suit.CLUBS, Value.THREE),
-        new PokerCard(Suit.DIAMONDS, Value.SEVEN),
-        new PokerCard(Suit.HEARTS, Value.SEVEN),
-        new PokerCard(Suit.SPADES, Value.SEVEN),
-        new PokerCard(Suit.CLUBS, Value.SEVEN)
+        new PokerCard(Suit.SPADES, Value.THREE),
+        new PokerCard(Suit.HEARTS, Value.THREE),
+        new PokerCard(Suit.DIAMONDS, Value.TWO),
+        new PokerCard(Suit.CLUBS, Value.NINE)
         );
 
         try{
