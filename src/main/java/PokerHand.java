@@ -100,7 +100,7 @@ public class PokerHand implements Comparable<PokerHand> {
         List<Value> otherHandRanked = getRankedValuesByMatchCount(otherHandCounts, matchCount);
 
         // Compare highest-ranked matched values first
-        int result = Integer.compare(thisHandRanked.getFirst().ordinal(), otherHandRanked.getFirst().ordinal());
+        int result = Integer.compare(thisHandRanked.get(0).ordinal(), otherHandRanked.get(0).ordinal());
         if (result != 0) return result;
 
         // Compare all cards to resolve the tie
