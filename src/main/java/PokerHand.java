@@ -126,6 +126,9 @@ public class PokerHand implements Comparable<PokerHand> {
                 .sorted(Comparator.reverseOrder())
                 .toList();
 
+        thisHandValues = adjustForTieBreakInvolvingLowAceStraight(thisHandValues);
+        otherHandValues = adjustForTieBreakInvolvingLowAceStraight(otherHandValues);
+
         for (int i = 0; i < thisHandValues.size(); i++) {
             int comparison = Integer.compare(thisHandValues.get(i), otherHandValues.get(i));
             if (comparison != 0) return comparison;
@@ -143,9 +146,24 @@ public class PokerHand implements Comparable<PokerHand> {
                                                .map(pokerCard -> pokerCard.getValue().ordinal())
                                                .sorted()
                                                .toList();
+        if(isLowAceStraight(sortedValues)) return true;
 
         return IntStream.range(0, sortedValues.size() - 1)
                         .allMatch(i -> sortedValues.get(i) + 1 == sortedValues.get(i + 1));
+    }
+
+    private List<Integer> adjustForTieBreakInvolvingLowAceStraight(List<Integer> handValues) {
+        if (isLowAceStraight(handValues)) {
+            return List.of(3, 2, 1, 0, -1); // Adjusting Ace to be lowest, the hand with these values loses the tiebreak
+        }
+        return handValues; // No change if not a Low Ace Straight
+    }
+
+    private boolean isLowAceStraight(List<Integer> handValues) {
+        List<Integer> ascendingOrdinalValuesOfLowAceStraight = List.of(0,1,2,3,12);
+        List<Integer> descendingOrdinalValuesOfLowAceStraight = List.of(12,3,2,1,0);
+        return handValues.equals(ascendingOrdinalValuesOfLowAceStraight)
+                || handValues.equals(descendingOrdinalValuesOfLowAceStraight);
     }
 
 }
