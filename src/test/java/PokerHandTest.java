@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PokerHandTest {
 
@@ -103,7 +102,6 @@ public class PokerHandTest {
     PokerHand one_Pair_Hand = new PokerHand(one_Pair_Cards);
     PokerHand high_Card_Hand = new PokerHand(high_Cards);
 
-
     @BeforeEach
     public void setUp() {
         pokerCards = new ArrayList<>();
@@ -160,7 +158,10 @@ public class PokerHandTest {
     }
 
     @Test
-    public void low_Ace_Straight_Wins_Against_Lower_Ranks() {
+    public void low_Ace_Straight_Is_Evaluated_Like_A_Straight_Compared_to_other_Ranks() {
+        assertEquals(-1, low_Ace_Straight_Hand.compareTo(straight_Flush_Hand));
+        assertEquals(-1, low_Ace_Straight_Hand.compareTo(four_Of_A_Kind_Hand));
+        assertEquals(-1, low_Ace_Straight_Hand.compareTo(full_House_Hand));
         assertEquals(-1, low_Ace_Straight_Hand.compareTo(flush_Hand));
         assertEquals(1, low_Ace_Straight_Hand.compareTo(three_Of_A_Kind_Hand));
         assertEquals(1, low_Ace_Straight_Hand.compareTo(two_Pairs_Hand));
@@ -185,9 +186,11 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.JACK),
                 new PokerCard(Suit.HEARTS, Value.NINE));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
@@ -206,6 +209,7 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.JACK),
                 new PokerCard(Suit.HEARTS, Value.NINE));
 
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareTo(secondHand));
@@ -227,9 +231,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.TEN),
                 new PokerCard(Suit.DIAMONDS, Value.TEN));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
@@ -248,9 +253,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.SIX),
                 new PokerCard(Suit.DIAMONDS, Value.SIX));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
@@ -269,9 +275,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.DIAMONDS, Value.JACK),
                 new PokerCard(Suit.DIAMONDS, Value.NINE));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
@@ -290,6 +297,7 @@ public class PokerHandTest {
                 new PokerCard(Suit.DIAMONDS, Value.JACK),
                 new PokerCard(Suit.DIAMONDS, Value.NINE));
 
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareTo(secondHand));
@@ -311,9 +319,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.JACK),
                 new PokerCard(Suit.DIAMONDS, Value.NINE));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
@@ -328,10 +337,11 @@ public class PokerHandTest {
         List<PokerCard> otherPokerCards = List.of(
                 new PokerCard(Suit.SPADES, Value.SIX),
                 new PokerCard(Suit.CLUBS, Value.FIVE),
-                new PokerCard(Suit.CLUBS, Value.SEVEN),
+                new PokerCard(Suit.DIAMONDS, Value.SEVEN),
                 new PokerCard(Suit.HEARTS, Value.FOUR),
                 new PokerCard(Suit.DIAMONDS, Value.THREE));
 
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareTo(secondHand));
@@ -339,6 +349,7 @@ public class PokerHandTest {
 
     @Test
     public void tie_Break_In_Rank_Straight_Again_Straight_With_Low_Ace() {
+        checkBothListsForDuplicates(straight_Cards, low_Ace_Straight_Cards);
         PokerHand straightHand = new PokerHand(straight_Cards);
         PokerHand straightWithLowAceHand = new PokerHand(low_Ace_Straight_Cards);
         assertEquals(1, straightHand.compareTo(straightWithLowAceHand));
@@ -360,9 +371,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.FOUR),
                 new PokerCard(Suit.DIAMONDS, Value.NINE));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand higherHand = new PokerHand(pokerCards);
+        PokerHand lowerHand = new PokerHand(otherPokerCards);
+        assertEquals(1, higherHand.compareTo(lowerHand));
     }
 
     @Test
@@ -381,15 +393,16 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.FOUR),
                 new PokerCard(Suit.DIAMONDS, Value.THREE));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
     public void tie_Break_In_Rank_Two_Pair_with_LowerPair() {
         pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.NINE),
+                new PokerCard(Suit.DIAMONDS, Value.NINE),
                 new PokerCard(Suit.DIAMONDS, Value.SIX),
                 new PokerCard(Suit.HEARTS, Value.JACK),
                 new PokerCard(Suit.SPADES, Value.JACK),
@@ -402,9 +415,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.FOUR),
                 new PokerCard(Suit.DIAMONDS, Value.JACK));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand higherHand = new PokerHand(pokerCards);
+        PokerHand lowerHand = new PokerHand(otherPokerCards);
+        assertEquals(1, higherHand.compareTo(lowerHand));
     }
 
     @Test
@@ -423,9 +437,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.SIX),
                 new PokerCard(Suit.DIAMONDS, Value.KING));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand higherHand = new PokerHand(pokerCards);
+        PokerHand lowerHand = new PokerHand(otherPokerCards);
+        assertEquals(1, higherHand.compareTo(lowerHand));
     }
 
     @Test
@@ -444,6 +459,7 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.SIX),
                 new PokerCard(Suit.DIAMONDS, Value.KING));
 
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareTo(secondHand));
@@ -465,9 +481,10 @@ public class PokerHandTest {
                 new PokerCard(Suit.CLUBS, Value.QUEEN),
                 new PokerCard(Suit.DIAMONDS, Value.NINE));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(-1, firstHand.compareTo(secondHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand lowerHand = new PokerHand(pokerCards);
+        PokerHand higherHand = new PokerHand(otherPokerCards);
+        assertEquals(-1, lowerHand.compareTo(higherHand));
     }
 
     @Test
@@ -486,6 +503,7 @@ public class PokerHandTest {
                 new PokerCard(Suit.CLUBS, Value.QUEEN),
                 new PokerCard(Suit.DIAMONDS, Value.THREE));
 
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareTo(secondHand));
@@ -501,36 +519,42 @@ public class PokerHandTest {
                 new PokerCard(Suit.HEARTS, Value.TWO));
 
         List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.ACE),
+                new PokerCard(Suit.HEARTS, Value.ACE),
                 new PokerCard(Suit.SPADES, Value.EIGHT),
                 new PokerCard(Suit.DIAMONDS, Value.FOUR),
                 new PokerCard(Suit.SPADES, Value.TWO),
                 new PokerCard(Suit.CLUBS, Value.TWO));
 
-        PokerHand firstHand = new PokerHand(pokerCards);
-        PokerHand secondHand = new PokerHand(otherPokerCards);
-        assertEquals(1, firstHand.compareCardsDirectlyBetweenTwoHands(secondHand));
-        assertEquals(-1, secondHand.compareCardsDirectlyBetweenTwoHands(firstHand));
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
+        PokerHand higherHand = new PokerHand(pokerCards);
+        PokerHand lowerHand = new PokerHand(otherPokerCards);
+        assertEquals(1, higherHand.compareCardsDirectlyBetweenTwoHands(lowerHand));
+        assertEquals(-1, lowerHand.compareCardsDirectlyBetweenTwoHands(higherHand));
     }
 
     @Test
     public void tie_Stand_In_Rank_HighCard() {
         pokerCards = List.of(
-                new PokerCard(Suit.CLUBS, Value.ACE),
+                new PokerCard(Suit.SPADES, Value.ACE),
                 new PokerCard(Suit.DIAMONDS, Value.EIGHT),
-                new PokerCard(Suit.HEARTS, Value.FIVE),
+                new PokerCard(Suit.SPADES, Value.FIVE),
                 new PokerCard(Suit.SPADES, Value.KING),
                 new PokerCard(Suit.CLUBS, Value.TWO));
 
         List<PokerCard> otherPokerCards = List.of(
-                new PokerCard(Suit.SPADES, Value.KING),
+                new PokerCard(Suit.HEARTS, Value.KING),
                 new PokerCard(Suit.CLUBS, Value.ACE),
-                new PokerCard(Suit.CLUBS, Value.TWO),
+                new PokerCard(Suit.HEARTS, Value.TWO),
                 new PokerCard(Suit.HEARTS, Value.FIVE),
-                new PokerCard(Suit.DIAMONDS, Value.EIGHT));
+                new PokerCard(Suit.CLUBS, Value.EIGHT));
 
+        checkBothListsForDuplicates(pokerCards, otherPokerCards);
         PokerHand firstHand = new PokerHand(pokerCards);
         PokerHand secondHand = new PokerHand(otherPokerCards);
         assertEquals(0, firstHand.compareCardsDirectlyBetweenTwoHands(secondHand));
+    }
+
+    private void checkBothListsForDuplicates(List<PokerCard> pokerCards, List<PokerCard> otherPokerCards) {
+        assertDoesNotThrow(() -> PokerGame.checkBothListsOfCardsForDuplicates(pokerCards, otherPokerCards));
     }
 }
